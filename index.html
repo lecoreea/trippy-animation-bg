@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trippy Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="trippyCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('trippyCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function drawTrippy(time) {
+            let w = canvas.width, h = canvas.height;
+            let imgData = ctx.createImageData(w, h);
+            let data = imgData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                let x = (i / 4) % w;
+                let y = Math.floor(i / 4 / w);
+                let r = Math.sin(x * 0.02 + time * 0.005) * 127 + 128;
+                let g = Math.sin(y * 0.02 + time * 0.005) * 127 + 128;
+                let b = Math.sin((x + y) * 0.02 + time * 0.005) * 127 + 128;
+                
+                data[i] = r;     // Red
+                data[i + 1] = g; // Green
+                data[i + 2] = b; // Blue
+                data[i + 3] = 255; // Alpha
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+            requestAnimationFrame(drawTrippy);
+        }
+
+        requestAnimationFrame(drawTrippy);
+    </script>
+</body>
+</html>
